@@ -9,6 +9,7 @@ namespace NAJ_Lab1
 {
     class Engine : ECSEngine
     {
+
         public override void InitialiseContent()
         {
         }
