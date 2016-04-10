@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Engine.cs" />
     <Compile Include="ChopperGame.cs" />
+    <Compile Include="Heightmap.cs" />
     <Compile Include="ProgramStart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

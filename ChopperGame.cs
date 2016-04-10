@@ -10,28 +10,14 @@ namespace NAJ_Lab1
     /// </summary>
     public class ChopperGame : Game
     {
-        public struct VertexPositionColorNormal
-        {
-            public Vector3 Position;
-            public Color Color;
-            public Vector3 Normal;
-
-            public readonly static VertexDeclaration VertexDeclaration = new VertexDeclaration
-            (
-                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-                new VertexElement(sizeof(float) * 3, VertexElementFormat.Color, VertexElementUsage.Color, 0),
-                new VertexElement(sizeof(float) * 3 + 4, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
-            );
-        }
-
         GraphicsDeviceManager graphicsDeviceManager;
         GraphicsDevice graphicsDevice;
         SpriteBatch spriteBatch;
-        VertexBuffer myVertexBuffer;
-        IndexBuffer myIndexBuffer;
-
+        VertexBuffer vertexBuffer;
+        IndexBuffer indexBuffer;
+        Heightmap heightmap;
         BasicEffect effect;
-        VertexPositionColorNormal[] vertices;
+        HeightmapSystem.VertexPositionColorNormal[] vertices;
         Matrix viewMatrix;
         Matrix projectionMatrix;
 
@@ -54,7 +40,6 @@ namespace NAJ_Lab1
         public ChopperGame() : base()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
         }
 
         public void StartGame()
@@ -80,6 +65,7 @@ namespace NAJ_Lab1
             graphicsDeviceManager.IsFullScreen = false;
             graphicsDeviceManager.ApplyChanges();
 
+            Content.RootDirectory = "Content";
             Window.Title = "Lab 1 - Datorgrafik!";
 
             base.Initialize();
@@ -98,17 +84,13 @@ namespace NAJ_Lab1
             effect = new BasicEffect(graphicsDevice);
             effect.EnableDefaultLighting();
 
-            Texture2D heightMap = Content.Load<Texture2D>("canyon");
-            LoadHeightData(heightMap);
+            Texture2D heightmapTexture = Content.Load<Texture2D>("canyon");
+            heightmap = new Heightmap(graphicsDevice);
+            heightmap.LoadHeightmap(heightmapTexture, viewMatrix, projectionMatrix);
 
             chopperModel = Content.Load<Model>("Chopper");
             chopperPos = new Vector3(0, 0, 0);
             chopperAngle = 0;
-
-            SetUpVertices();
-            SetUpIndices();
-            CalculateNormals();
-            CopyToBuffers();
         }
 
         /// <summary>
@@ -162,23 +144,8 @@ namespace NAJ_Lab1
             rs.CullMode = CullMode.None;
             graphicsDevice.RasterizerState = rs;
 
-            Matrix worldMatrix = Matrix.CreateTranslation(-terrainWidth / 2.0f, 0, terrainHeight / 2.0f) * Matrix.CreateRotationY(angle);
-            effect.View = viewMatrix;
-            effect.Projection = projectionMatrix;
-            effect.World = worldMatrix;
-            effect.VertexColorEnabled = true;
             Vector3 lightDirection = new Vector3(1.0f, -1.0f, -1.0f);
             lightDirection.Normalize();
-
-
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-
-                graphicsDevice.Indices = myIndexBuffer;
-                graphicsDevice.SetVertexBuffer(myVertexBuffer);
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, (int)indicesLenDiv3);
-            }
 
             DrawModel(chopperModel, chopperWorld, chopperView, chopperProjection);
 
@@ -216,117 +183,10 @@ namespace NAJ_Lab1
             model.Bones[boneIndex].Transform = t * model.Bones[boneIndex].Transform;
         }
 
-        private void LoadHeightData(Texture2D heightMap)
-        {
-            terrainWidth = heightMap.Width;
-            terrainHeight = heightMap.Height;
-
-            Color[] heightMapColors = new Color[terrainWidth * terrainHeight];
-            heightMap.GetData(heightMapColors);
-
-            heightData = new float[terrainWidth, terrainHeight];
-            for (int x = 0; x < terrainWidth; x++)
-                for (int y = 0; y < terrainHeight; y++)
-                    heightData[x, y] = heightMapColors[x + y * terrainWidth].R / 4f;
-        }
-
         private void SetUpCamera()
         {
             viewMatrix = Matrix.CreateLookAt(new Vector3(60, 80, -180), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, graphicsDevice.Viewport.AspectRatio, 1.0f, 500.0f);
-        }
-
-        private void SetUpVertices()
-        {
-            float minHeight = float.MaxValue;
-            float maxHeight = float.MinValue;
-            for (int x = 0; x < terrainWidth; x++)
-            {
-                for (int y = 0; y < terrainHeight; y++)
-                {
-                    if (heightData[x, y] < minHeight)
-                        minHeight = heightData[x, y];
-                    if (heightData[x, y] > maxHeight)
-                        maxHeight = heightData[x, y];
-                }
-            }
-
-            vertices = new VertexPositionColorNormal[terrainWidth * terrainHeight];
-            for (int x = 0; x < terrainWidth; x++)
-            {
-                for (int y = 0; y < terrainHeight; y++)
-                {
-                    vertices[x + y * terrainWidth].Position = new Vector3(x, heightData[x, y], -y);
-
-                    if (heightData[x, y] < minHeight + (maxHeight - minHeight) / 4)
-                        vertices[x + y * terrainWidth].Color = Color.SandyBrown;
-                    else if (heightData[x, y] < minHeight + (maxHeight - minHeight) * 2 / 4)
-                        vertices[x + y * terrainWidth].Color = Color.BurlyWood;
-                    else if (heightData[x, y] < minHeight + (maxHeight - minHeight) * 3 / 4)
-                        vertices[x + y * terrainWidth].Color = Color.SandyBrown;
-                    else
-                        vertices[x + y * terrainWidth].Color = Color.Chocolate;
-                }
-            }
-        }
-
-        private void SetUpIndices()
-        {
-            indices = new int[(terrainWidth - 1) * (terrainHeight - 1) * 6];
-            int counter = 0;
-            for (int y = 0; y < terrainHeight - 1; y++)
-            {
-                for (int x = 0; x < terrainWidth - 1; x++)
-                {
-                    int lowerLeft = x + y * terrainWidth;
-                    int lowerRight = (x + 1) + y * terrainWidth;
-                    int topLeft = x + (y + 1) * terrainWidth;
-                    int topRight = (x + 1) + (y + 1) * terrainWidth;
-
-                    indices[counter++] = topLeft;
-                    indices[counter++] = lowerRight;
-                    indices[counter++] = lowerLeft;
-
-                    indices[counter++] = topLeft;
-                    indices[counter++] = topRight;
-                    indices[counter++] = lowerRight;
-                }
-            }
-
-            indicesLenDiv3 = indices.Length / 3;
-        }
-
-        private void CalculateNormals()
-        {
-            for (int i = 0; i < vertices.Length; i++)
-                vertices[i].Normal = new Vector3(0, 0, 0);
-
-            for (int i = 0; i < indices.Length / 3; i++)
-            {
-                int index1 = indices[i * 3];
-                int index2 = indices[i * 3 + 1];
-                int index3 = indices[i * 3 + 2];
-
-                Vector3 side1 = vertices[index1].Position - vertices[index3].Position;
-                Vector3 side2 = vertices[index1].Position - vertices[index2].Position;
-                Vector3 normal = Vector3.Cross(side1, side2);
-
-                vertices[index1].Normal += normal;
-                vertices[index2].Normal += normal;
-                vertices[index3].Normal += normal;
-            }
-
-            for (int i = 0; i < vertices.Length; i++)
-                vertices[i].Normal.Normalize();
-        }
-
-        private void CopyToBuffers()
-        {
-            myVertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionColorNormal.VertexDeclaration, vertices.Length, BufferUsage.WriteOnly);
-            myVertexBuffer.SetData(vertices);
-
-            myIndexBuffer = new IndexBuffer(graphicsDevice, typeof(int), indices.Length, BufferUsage.WriteOnly);
-            myIndexBuffer.SetData(indices);
         }
     }
 }
