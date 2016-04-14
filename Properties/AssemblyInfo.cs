@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NAJ_Lab1")]
-[assembly: AssemblyProduct("NAJ_Lab1")]
+[assembly: AssemblyTitle("Test")]
+[assembly: AssemblyProduct("Test")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Microsoft")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("58a116df-e4da-4e0a-8b4f-d2d021fef931")]
+[assembly: Guid("4d3e5f59-f1fd-426e-b4ae-9e4fcc8bfef3")]
 
 // Version information for an assembly consists of the following four values:
 //

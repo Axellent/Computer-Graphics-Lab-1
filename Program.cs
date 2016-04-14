@@ -1,4 +1,5 @@
 ﻿using System;
+using GameEngine;
 
 namespace NAJ_Lab1
 {
@@ -6,7 +7,7 @@ namespace NAJ_Lab1
     /// <summary>
     /// The main class.
     /// </summary>
-    public static class ProgramStart
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.
@@ -14,8 +15,8 @@ namespace NAJ_Lab1
         [STAThread]
         static void Main()
         {
-            ChopperGame chopperGame = new ChopperGame();
-            chopperGame.StartGame();
+            Engine engine = new Engine();
+            engine.StartEngine();
         }
     }
 #endif

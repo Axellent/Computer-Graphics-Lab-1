@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5ADAFA77-5F0B-4391-B23E-2DE9A687C0D0}</ProjectGuid>
+    <ProjectGuid>{38E82CC2-555B-4A7D-9A00-D7CAEAEBCC2D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NAJ_Lab1</RootNamespace>
-    <AssemblyName>NAJ_Lab1</AssemblyName>
+    <RootNamespace>Test</RootNamespace>
+    <AssemblyName>Test</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -39,10 +39,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Engine.cs" />
-    <Compile Include="ChopperGame.cs" />
-    <Compile Include="Heightmap.cs" />
-    <Compile Include="ProgramStart.cs" />
+    <Compile Include="Init\InitGame.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\ChopperControlSystem.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -52,20 +53,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\canyon.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ECS_Engine\ECS_Engine.csproj">
-      <Project>{86707912-7e3b-4288-b4a8-243f3d0f9e1a}</Project>
-      <Name>ECS_Engine</Name>
+    <ProjectReference Include="..\GameEngine\GameEngine.csproj">
+      <Project>{538b6139-9ac8-4119-8464-c6fb08ab52cc}</Project>
+      <Name>GameEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\Chopper.fbx" />
+    <Folder Include="Components\" />
+    <Folder Include="Managers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
