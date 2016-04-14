@@ -42,20 +42,19 @@ namespace Test.Init
             cm.AddMeshTransform(3, Matrix.CreateRotationY(0.5f));
             ComponentManager.Instance.AddComponentToEntity(chopper, cm);
             TransformComponent chopperTransform = new TransformComponent();
-            chopperTransform.position = new Vector3(0, 30, 90);
+            chopperTransform.position = new Vector3(10, 10, 60);
+            chopperTransform.vRotation = new Vector3(0,MathHelper.Pi,0);
             chopperTransform.scale = new Vector3(1, 1, 1);
             ComponentManager.Instance.AddComponentToEntity(chopper, chopperTransform);
 
             Entity Camera = EntityFactory.Instance.NewEntityWithTag("3DCamera");
             CameraComponent cc = new CameraComponent(engine.GetGraphicsDeviceManager());
-            cc.position = new Vector3(0, 10, 10);
+            cc.position = new Vector3(0, 20, 60);
 
             //Use this line instead to see the back rotor rotate at a different speed! :)
             //cc.SetChaseCameraPosition(new Vector3(10f, 20f, 30f));
-            cc.SetChaseCameraPosition(new Vector3(0f, 20f, 30f));
-            
-
-
+            cc.SetChaseCameraPosition(new Vector3(0f, 20f, 40f));
+                        
             ComponentManager.Instance.AddComponentToEntity(Camera, cc);
             ComponentManager.Instance.AddComponentToEntity(Camera, new TransformComponent());
             cc.SetTargetEntity("Chopper");

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>D:/lab1/GameEngine/Test/Content/Chopper.fbx</SourceFile>
+  <SourceFile>f:/systemarkitektprogrammet/år3/DatorGrafik/Test/Content/Chopper.fbx</SourceFile>
   <SourceTime>2016-03-17T08:16:40.112+01:00</SourceTime>
-  <DestFile>D:/lab1/GameEngine/Test/Content/bin/Windows/Chopper.xnb</DestFile>
-  <DestTime>2016-04-11T09:02:50.3052531+02:00</DestTime>
+  <DestFile>f:/systemarkitektprogrammet/år3/DatorGrafik/Test/Content/bin/Windows/Chopper.xnb</DestFile>
+  <DestTime>2016-04-14T11:10:12.1719748+02:00</DestTime>
   <Importer>FbxImporter</Importer>
   <ImporterTime>2016-03-30T08:36:08+02:00</ImporterTime>
   <Processor>ModelProcessor</Processor>

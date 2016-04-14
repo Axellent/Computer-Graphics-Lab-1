@@ -42,11 +42,11 @@ namespace Test
 
                     if (Utilities.CheckKeyboardAction("up", BUTTON_STATE.HELD, k))
                     {
-                        t.position += new Vector3(0f, 0.2f, 0f);
+                        t.position += new Vector3(0f, -0.2f, 0f);
                     }
                     if (Utilities.CheckKeyboardAction("down", BUTTON_STATE.HELD, k))
                     {
-                        t.position += new Vector3(0f, -0.2f, 0f);
+                        t.position += new Vector3(0f, 0.2f, 0f);
                     }
                     if (Utilities.CheckKeyboardAction("forward", BUTTON_STATE.HELD, k))
                     {

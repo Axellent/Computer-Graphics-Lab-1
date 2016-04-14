@@ -4,7 +4,7 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/lab1/GameEngine/Test/Content/Chopper.fbx</File>
-    <File>D:/lab1/GameEngine/Test/Content/canyon.png</File>
+    <File>f:/systemarkitektprogrammet/år3/DatorGrafik/Test/Content/Chopper.fbx</File>
+    <File>f:/systemarkitektprogrammet/år3/DatorGrafik/Test/Content/canyon.png</File>
   </SourceFiles>
 </SourceFileCollection>
